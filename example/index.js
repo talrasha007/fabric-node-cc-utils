@@ -1,7 +1,6 @@
-const shim = require('fabric-shim');
-const { shim, Chaincode, parseCreator } = require('fabric-node-cc-utils');
+const { Chaincode, parseCreator } = require('fabric-node-cc-utils');
 
-class Example {
+class Example extends Chaincode {
   static async getId(stub) {
     return parseCreator(stub).subjectId;
   }
