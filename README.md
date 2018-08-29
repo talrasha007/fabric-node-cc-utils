@@ -2,7 +2,7 @@
 Utils for fabric nodejs chaincode.
 
 ```js
-const { Chaincode, parseCreator } = require('fabric-node-cc-utils');
+const { shim, Chaincode, parseCreator } = require('fabric-node-cc-utils');
 
 /*
   Extends your class from Chaincode.
