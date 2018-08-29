@@ -1,0 +1,29 @@
+{
+  "name": "fabric-node-cc-utils",
+  "version": "1.2.0",
+  "description": "Utils for fabric node chaincode.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/talrasha007/fabric-node-cc-utils.git"
+  },
+  "keywords": [
+    "hyperledger",
+    "fabric",
+    "nodejs",
+    "chaincode",
+    "utils"
+  ],
+  "author": "Tal Rasha",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/talrasha007/fabric-node-cc-utils/issues"
+  },
+  "homepage": "https://github.com/talrasha007/fabric-node-cc-utils#readme",
+  "dependencies": {
+    "fabric-shim": "^1.2.0"
+  }
+}
