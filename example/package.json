@@ -1,0 +1,17 @@
+{
+	"name": "node_cc_example",
+	"version": "1.0.0",
+	"description": "node_cc_example chaincode implemented in node.js",
+	"engines": {
+		"node": ">=8.4.0",
+		"npm": ">=5.3.0"
+	},
+	"scripts": {
+		"start": "node index.js"
+	},
+	"engine-strict": true,
+	"license": "Apache-2.0",
+	"dependencies": {
+		"fabric-node-cc-utils": "~1.2.0"
+	}
+}

@@ -56,6 +56,7 @@ class Chaincode {
 }
 
 module.exports = {
+  shim,
   parseCreator,
   Chaincode
 };
