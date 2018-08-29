@@ -55,8 +55,40 @@ class Chaincode {
   }
 }
 
+class CouchDbQueryResult {
+  constructor(res) {
+    this._res = res;
+  }
+
+  get done() {
+    return this._done;
+  }
+
+  async next() {
+    if (this._done) return ;
+
+    const item = await this._res.next();
+    this._done = item.done;
+    return item.value && {
+      namespace: item.value.namespace,
+      key: item.value.key,
+      value: item.value.value.toBuffer().toString()
+    };
+  }
+
+  async toArray() {
+    const ret = [];
+    while (!this.done) {
+      const record = await this.next();
+      record && ret.push(record);
+    }
+    return ret;
+  }
+}
+
 module.exports = {
   shim,
   parseCreator,
-  Chaincode
+  Chaincode,
+  CouchDbQueryResult
 };

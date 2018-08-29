@@ -2,7 +2,7 @@
 Utils for fabric nodejs chaincode.
 
 ```js
-const { shim, Chaincode, parseCreator } = require('fabric-node-cc-utils');
+const { shim, Chaincode, parseCreator, CouchDbQueryResult } = require('fabric-node-cc-utils');
 
 /*
   Extends your class from Chaincode.
@@ -19,6 +19,12 @@ class Example extends Chaincode {
   async getIssuerId(stub) {
     return parseCreator(stub).issuerId;
   }
+
+  async query(stub, args) {
+    const q = args[0];
+    const res = new CouchDbQueryResult(await stub.getQueryResult(q));
+    return await res.toArray();
+  }  
 }
 
 shim.start(new Example());
