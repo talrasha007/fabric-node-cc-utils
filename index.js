@@ -47,7 +47,7 @@ class Chaincode {
       return await callChaincodeFn(this[fcn], this, stub, params, fcn);
     }
 
-    if (this.constructor[fcb]) {
+    if (this.constructor[fcn]) {
       return await callChaincodeFn(this.constructor[fcn], null, stub, params, fcn);
     }
 
