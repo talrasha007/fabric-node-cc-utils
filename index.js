@@ -24,7 +24,7 @@ async function callChaincodeFn(fn, context, stub, args, fcn) {
 
     if (typeof payload === 'string') {
       payload = Buffer.from(payload);
-    } else if (!payload.toBuffer && !Buffer.isBuffer(payload)) {
+    } else if (payload && !payload.toBuffer && !Buffer.isBuffer(payload)) {
       payload = Buffer.from(JSON.stringify(payload));
     }
 
