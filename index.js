@@ -41,6 +41,17 @@ class Chaincode {
   }
 
   async Invoke(stub) {
+    Object.assign(stub, {
+      async invokeStringChaincode(chaincodeName, args, channel) {
+        const resp = await this.invokeChaincode(chaincodeName, args, channel);
+        return resp.payload.toBuffer().toString();
+      },
+
+      async invokeJsonChaincode(chaincodeName, args, channel) {
+        return JSON.parse(await this.invokeStringChaincode(chaincodeName, args, channel));
+      }
+    });
+
     const { fcn, params } = stub.getFunctionAndParameters();
 
     if (this[fcn]) {
