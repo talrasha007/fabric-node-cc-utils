@@ -35,22 +35,42 @@ async function callChaincodeFn(fn, context, stub, args, fcn) {
   }
 }
 
+const StubExt = {
+  async invokeStringChaincode(chaincodeName, args, channel) {
+    const resp = await this.invokeChaincode(chaincodeName, args, channel);
+    return resp.payload.toBuffer().toString();
+  },
+
+  async invokeJsonChaincode(chaincodeName, args, channel) {
+    return JSON.parse(await this.invokeStringChaincode(chaincodeName, args, channel));
+  },
+
+  async putStringState(key, value) {
+    return await this.putState(key, Buffer.from(value));
+  },
+
+  async putJsonState(key, obj) {
+    return await this.putStringState(key, JSON.stringify(obj));
+  },
+
+  async getStringState(key) {
+    const resp = await this.getState(key);
+    return resp.toString();
+  },
+
+  async getJsonState(key) {
+    const resp = await this.getStringState(key);
+    return resp && JSON.parse(resp);
+  }
+};
+
 class Chaincode {
   Init() {
     return shim.success();
   }
 
   async Invoke(stub) {
-    Object.assign(stub, {
-      async invokeStringChaincode(chaincodeName, args, channel) {
-        const resp = await this.invokeChaincode(chaincodeName, args, channel);
-        return resp.payload.toBuffer().toString();
-      },
-
-      async invokeJsonChaincode(chaincodeName, args, channel) {
-        return JSON.parse(await this.invokeStringChaincode(chaincodeName, args, channel));
-      }
-    });
+    Object.assign(stub, StubExt);
 
     const { fcn, params } = stub.getFunctionAndParameters();
 
