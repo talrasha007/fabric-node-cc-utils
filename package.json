@@ -1,6 +1,6 @@
 {
   "name": "fabric-node-cc-utils",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "description": "Utils for fabric node chaincode.",
   "main": "index.js",
   "scripts": {

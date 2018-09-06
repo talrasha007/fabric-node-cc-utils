@@ -1,3 +1,4 @@
+const assert = require('assert');
 const shim = require('fabric-shim');
 const x509 = require('x509');
 
@@ -35,7 +36,21 @@ async function callChaincodeFn(fn, context, stub, args, fcn) {
   }
 }
 
+function isNoneEmptyString(v) {
+  return v && typeof v === 'string';
+}
+
 const StubExt = {
+  createCompositeKey(objectType, attributes) {
+    assert(Array.isArray(attributes), 'attributes must be an array');
+    assert(
+      isNoneEmptyString(objectType) && attributes.every(isNoneEmptyString),
+      'object type or attribute not a non-zero length string'
+    );
+
+    return ['', objectType, ...attributes, ''].join('\x00');
+  },
+
   async invokeStringChaincode(chaincodeName, args, channel) {
     const resp = await this.invokeChaincode(chaincodeName, args, channel);
     return resp.payload.toBuffer().toString();
@@ -86,7 +101,7 @@ class Chaincode {
   }
 }
 
-class CouchDbQueryResult {
+class CouchDbQuery {
   constructor(res) {
     this._res = res;
   }
@@ -103,7 +118,7 @@ class CouchDbQueryResult {
     return item.value && {
       namespace: item.value.namespace,
       key: item.value.key,
-      value: item.value.value.toBuffer().toString()
+      value: JSON.parse(item.value.value.toBuffer().toString())
     };
   }
 
@@ -115,11 +130,32 @@ class CouchDbQueryResult {
     }
     return ret;
   }
+
+  static async count(stub, query) {
+    query = typeof query === 'string' ? query : JSON.stringify(query);
+    const res = await stub.getQueryResult(query);
+    let cnt = 0;
+    let item;
+
+    do {
+      item = await res.next();
+      item.value && cnt++;
+    } while (!item.done);
+
+    return cnt;
+  }
+
+  static async toArray(stub, query) {
+    query = typeof query === 'string' ? query : JSON.stringify(query);
+    const res = await stub.getQueryResult(query);
+    const r = new CouchDbQuery(res);
+    return await r.toArray();
+  }
 }
 
 module.exports = {
   shim,
   parseCreator,
   Chaincode,
-  CouchDbQueryResult
+  CouchDbQuery
 };
