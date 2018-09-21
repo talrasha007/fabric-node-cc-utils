@@ -57,7 +57,8 @@ const StubExt = {
   },
 
   async invokeJsonChaincode(chaincodeName, args, channel) {
-    return JSON.parse(await this.invokeStringChaincode(chaincodeName, args, channel));
+    const resp = await this.invokeStringChaincode(chaincodeName, args, channel);
+    return JSON.parse(resp || 'null');
   },
 
   async putStringState(key, value) {
@@ -75,7 +76,7 @@ const StubExt = {
 
   async getJsonState(key) {
     const resp = await this.getStringState(key);
-    return resp && JSON.parse(resp);
+    return JSON.parse(resp || 'null');
   }
 };
 
